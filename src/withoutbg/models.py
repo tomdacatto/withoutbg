@@ -192,7 +192,7 @@ class SnapModel:
         target_width: int,
         target_height: int,
         ensure_multiple_of: int = 1,
-        interpolation_method: int = Image.LANCZOS,
+        interpolation_method: int = Image.Resampling.LANCZOS,
     ) -> np.ndarray:
         """
         Transforms an input image to prepare it for depth estimation by
@@ -205,7 +205,7 @@ class SnapModel:
         - ensure_multiple_of (int, optional): Ensures the dimensions of the
           resized image are multiples of this value. Defaults to 1.
         - interpolation_method (int, optional): The interpolation method to
-          use for resizing. Defaults to Image.LANCZOS.
+          use for resizing. Defaults to Image.Resampling.LANCZOS.
 
         Returns:
         - np.ndarray: The transformed image, normalized, and with the correct
@@ -231,7 +231,7 @@ class SnapModel:
         # Add batch dimension
         prepared_image = np.expand_dims(prepared_image, axis=0)
 
-        return prepared_image
+        return prepared_image.astype(np.float32)
 
     def _estimate_depth(
         self,
@@ -239,7 +239,7 @@ class SnapModel:
         target_width: int = 518,
         target_height: int = 518,
         ensure_multiple_of: int = 14,
-        interpolation_method: int = Image.BICUBIC,
+        interpolation_method: int = Image.Resampling.BICUBIC,
     ) -> Image.Image:
         """
         Stage 1: Depth estimation using Depth Anything V2 model.
@@ -252,7 +252,7 @@ class SnapModel:
         - ensure_multiple_of (int, optional): Ensures dimensions are multiples
           of this value. Defaults to 14.
         - interpolation_method (int, optional): PIL interpolation method.
-          Defaults to Image.BICUBIC.
+          Defaults to Image.Resampling.BICUBIC.
 
         Returns:
         - PIL.Image.Image: The inverse depth map as a grayscale PIL Image (0-255 range).
@@ -292,8 +292,8 @@ class SnapModel:
         - PIL.Image.Image: Alpha channel (A1) as grayscale PIL Image.
         """
         # Resize both images to 256x256 for matting model
-        rgb_resized = rgb_image.resize((256, 256), Image.LANCZOS)
-        depth_resized = depth_image.resize((256, 256), Image.LANCZOS)
+        rgb_resized = rgb_image.resize((256, 256), Image.Resampling.LANCZOS)
+        depth_resized = depth_image.resize((256, 256), Image.Resampling.LANCZOS)
 
         # Convert to numpy arrays and normalize to [0, 1]
         rgb_array = np.array(rgb_resized, dtype=np.float32) / 255.0
@@ -353,8 +353,8 @@ class SnapModel:
         rgb_array = np.array(rgb_image, dtype=np.float32) / 255.0
 
         # Resize depth and alpha to match RGB image size
-        depth_resized = depth_image.resize(original_size, Image.LANCZOS)
-        alpha_resized = alpha1.resize(original_size, Image.LANCZOS)
+        depth_resized = depth_image.resize(original_size, Image.Resampling.LANCZOS)
+        alpha_resized = alpha1.resize(original_size, Image.Resampling.LANCZOS)
 
         # Convert to arrays and scale to [0, 1]
         depth_array = np.array(depth_resized, dtype=np.float32) / 255.0
@@ -454,7 +454,10 @@ class SnapModel:
             alpha_channel = self.estimate_alpha(image)
 
             # Resize alpha to original image size
-            alpha_resized = alpha_channel.resize(original_size, Image.LANCZOS)
+            alpha_resized = alpha_channel.resize(
+                original_size,
+                Image.Resampling.LANCZOS
+                )
 
             # Convert original image to RGBA
             if image.mode != "RGBA":

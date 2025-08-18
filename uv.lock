@@ -1690,6 +1690,8 @@ dev = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
+    { name = "types-pillow" },
+    { name = "types-requests" },
 ]
 gpu = [
     { name = "onnxruntime-gpu" },
@@ -1724,6 +1726,8 @@ requires-dist = [
     { name = "requests", specifier = ">=2.25.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
     { name = "tqdm", specifier = ">=4.60.0" },
+    { name = "types-pillow", marker = "extra == 'dev'", specifier = ">=10.2.0" },
+    { name = "types-requests", marker = "extra == 'dev'", specifier = ">=2.32.0" },
 ]
 provides-extras = ["dev", "gpu"]
 
