@@ -435,9 +435,11 @@ class SnapModel:
         """
         # Load image
         if isinstance(input_image, (str, Path)):
-            image = Image.open(input_image)
+            with Image.open(input_image) as img:
+                image = img.copy()
         elif isinstance(input_image, bytes):
-            image = Image.open(io.BytesIO(input_image))
+            with Image.open(io.BytesIO(input_image)) as img:
+                image = img.copy()
         elif isinstance(input_image, Image.Image):
             image = input_image.copy()
         else:

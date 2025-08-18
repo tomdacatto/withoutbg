@@ -420,24 +420,46 @@ class TestCLIE2EErrorHandling:
         if not real_test_image_path.exists():
             pytest.skip("Real test image not available")
 
-        # Create a read-only directory
+        import platform
+        import stat
+
+        # Create a read-only directory - Windows requires different approach
         readonly_dir = temp_dir / "readonly"
         readonly_dir.mkdir()
-        readonly_dir.chmod(0o444)  # Read-only
-
-        try:
+        
+        # Use platform-specific permission handling
+        if platform.system() == "Windows":
+            # On Windows, create a file first, then make it read-only
             output_path = readonly_dir / "output.png"
-
+            output_path.touch()
+            output_path.chmod(stat.S_IREAD)
+            
             result = self.runner.invoke(
                 main, [str(real_test_image_path), "--output", str(output_path)]
             )
-
+            
             # Should fail due to permission error
             assert result.exit_code == 1
-
-        finally:
+            
             # Restore permissions for cleanup
-            readonly_dir.chmod(0o755)
+            output_path.chmod(stat.S_IWRITE | stat.S_IREAD)
+        else:
+            # Unix-style read-only directory
+            readonly_dir.chmod(0o444)
+            
+            try:
+                output_path = readonly_dir / "output.png"
+
+                result = self.runner.invoke(
+                    main, [str(real_test_image_path), "--output", str(output_path)]
+                )
+
+                # Should fail due to permission error
+                assert result.exit_code == 1
+
+            finally:
+                # Restore permissions for cleanup
+                readonly_dir.chmod(0o755)
 
     @pytest.mark.real_processing
     def test_e2e_disk_space_simulation(self, real_test_image_path, temp_dir):

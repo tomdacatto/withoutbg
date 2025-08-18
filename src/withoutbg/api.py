@@ -49,7 +49,8 @@ class StudioAPI:
     def _decode_image(self, base64_string: str) -> Image.Image:
         """Decode base64 string to PIL Image."""
         image_bytes = base64.b64decode(base64_string)
-        return Image.open(io.BytesIO(image_bytes))
+        with Image.open(io.BytesIO(image_bytes)) as img:
+            return img.copy()
 
     def _resize_for_api(
         self, image: Image.Image, max_size: int = 1024
@@ -134,11 +135,13 @@ class StudioAPI:
         try:
             # Store original image for local alpha application
             if isinstance(input_image, (str, Path)):
-                original_image = Image.open(input_image)
+                with Image.open(input_image) as img:
+                    original_image = img.copy()
             elif isinstance(input_image, Image.Image):
                 original_image = input_image.copy()
             elif isinstance(input_image, bytes):
-                original_image = Image.open(io.BytesIO(input_image))
+                with Image.open(io.BytesIO(input_image)) as img:
+                    original_image = img.copy()
             else:
                 raise APIError(f"Unsupported image type: {type(input_image)}")
 
