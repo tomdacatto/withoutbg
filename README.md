@@ -2,6 +2,7 @@
 
 **AI-powered background removal with local and cloud options**
 
+[![PyPI](https://img.shields.io/pypi/v/withoutbg.svg)](https://pypi.org/project/withoutbg/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![CI](https://github.com/withoutbg/withoutbg/actions/workflows/ci.yml/badge.svg)](https://github.com/withoutbg/withoutbg/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/withoutbg/withoutbg/branch/main/graph/badge.svg)](https://codecov.io/gh/withoutbg/withoutbg)
