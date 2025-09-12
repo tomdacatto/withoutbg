@@ -187,7 +187,7 @@ usage = api.get_usage()
 print(usage)
 ```
 
-## 🤝 Commercial Licensing
+## Commercial 
 
 
 ### API (Pay-per-use)
@@ -201,9 +201,6 @@ print(usage)
 ## 📚 Documentation
 
 - **[API Reference](https://withoutbg.com/documentation)** - Complete API documentation
-- **[Model Guide]()** - Choosing the right model
-- **[Integration Examples]()** - Real-world usage patterns
-- **[Quality Benchmarks]()** - Quality metrics and comparisons
 
 ## 🐛 Issues & Support
 
@@ -215,7 +212,6 @@ print(usage)
 
 Find our models on Hugging Face:
 - **[withoutbg/snap](https://huggingface.co/withoutbg/snap)** - Open source Snap model
-- **[Demo Widget](https://huggingface.co/spaces/withoutbg/demo)** - Try online
 
 
 ## 📄 License
