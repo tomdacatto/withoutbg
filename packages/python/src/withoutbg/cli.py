@@ -172,12 +172,14 @@ def _process_single(
 
     # Save result
     save_kwargs: dict[str, Any] = {}
-    original_result = result  # Keep reference to original for cleanup
+    converted_background = None  # Track if we created a new image for JPEG
+
     if format.lower() == "jpg":
         # Convert RGBA to RGB for JPEG
         if result.mode == "RGBA":
             background = Image.new("RGB", result.size, (255, 255, 255))
             background.paste(result, mask=result.split()[-1])  # Use alpha as mask
+            converted_background = background
             result = background
         save_kwargs["quality"] = quality
         save_kwargs["optimize"] = True
@@ -193,11 +195,10 @@ def _process_single(
         **save_kwargs,
     )
 
-    # Close the result image to ensure file handles are released on Windows
-    result.close()
-    # Also close the original if we created a new background
-    if result is not original_result:
-        original_result.close()
+    # Close images to ensure file handles are released on Windows
+    # Only close the converted background if we created one
+    if converted_background is not None:
+        converted_background.close()
 
 
 def _process_batch(
@@ -251,11 +252,13 @@ def _process_batch(
 
                 # Save result
                 save_kwargs: dict[str, Any] = {}
-                original_result = result  # Keep reference to original for cleanup
+                converted_background = None  # Track if we created a new image for JPEG
+
                 if format.lower() == "jpg":
                     if result.mode == "RGBA":
                         background = Image.new("RGB", result.size, (255, 255, 255))
                         background.paste(result, mask=result.split()[-1])
+                        converted_background = background
                         result = background
                     save_kwargs["quality"] = quality
                     save_kwargs["optimize"] = True
@@ -276,11 +279,10 @@ def _process_batch(
                     **save_kwargs,
                 )
 
-                # Close the result image to ensure file handles are released on Windows
-                result.close()
-                # Also close the original if we created a new background
-                if result is not original_result:
-                    original_result.close()
+                # Close images to ensure file handles are released on Windows
+                # Only close the converted background if we created one
+                if converted_background is not None:
+                    converted_background.close()
 
             except Exception as e:
                 if verbose:
