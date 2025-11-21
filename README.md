@@ -4,6 +4,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/withoutbg.svg)](https://pypi.org/project/withoutbg/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Status](https://img.shields.io/badge/Next_Gen_Model-Coming_Feb_2026-blue?style=for-the-badge&logo=github)](https://github.com/withoutbg/withoutbg/stargazers)
 
 Remove backgrounds from images instantly with AI. Choose between local processing (free) or withoutBG Pro (best quality).
 
@@ -126,6 +127,14 @@ withoutbg photo.jpg --verbose
 ![Example 3](/sample-results/open-source-focus/example3.png)
 ![Example 6](/sample-results/open-source-focus/example6.png)
 ![Example 4](/sample-results/open-source-focus/example4.png)
+
+
+## withoutBG Zoom is coming! 
+
+![withoutBG Zoom](/images/withoutBG-zoom-announcement.gif)
+
+We are finalizing a new architecture designed to deliver superior accuracy and finer detail. Star the repo to bookmark this upgrade for your future toolkit ⭐.
+
 
 ## 📦 Repository Structure
 
