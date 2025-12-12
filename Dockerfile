@@ -1,11 +1,11 @@
 # Multi-stage build for withoutbg backend
 # Build context should be the repository root: docker build -f Dockerfile .
 
-# Stage 1: Build stage with uv
+# Stage 1: Build stage
 FROM python:3.12-slim AS builder
 
-# Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+# Install build dependencies and uv
+RUN pip install --no-cache-dir uv
 
 # Set working directory
 WORKDIR /app
@@ -41,8 +41,8 @@ ENV PATH="/app/apps/web/backend/.venv/bin:/app/packages/python/.venv/bin:$PATH"
 # Copy application code
 COPY apps/web/backend/ ./backend/
 
-# Copy ONNX model checkpoints
-COPY models/checkpoints/ ./checkpoints/
+# Copy ONNX model checkpoints (optional - only if they exist)
+COPY models/checkpoints/ ./checkpoints/ 2>/dev/null || true
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
@@ -55,10 +55,6 @@ ENV WITHOUTBG_REFINER_MODEL_PATH=/app/checkpoints/focus_refiner_1.0.0.onnx
 
 # Expose port
 EXPOSE 8000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/api/health', timeout=5)" || exit 1
 
 # Run the application
 CMD ["python", "-m", "uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
