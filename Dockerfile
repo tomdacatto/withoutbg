@@ -34,9 +34,6 @@ ENV PYTHONUNBUFFERED=1
 # Copy application code
 COPY apps/web/backend/ ./backend/
 
-# Copy models if they exist
-COPY models/checkpoints/ ./checkpoints/ 2>/dev/null || true
-
 # Model environment variables
 ENV WITHOUTBG_DEPTH_MODEL_PATH=/app/checkpoints/depth_anything_v2_vits_slim.onnx
 ENV WITHOUTBG_ISNET_MODEL_PATH=/app/checkpoints/isnet.onnx
